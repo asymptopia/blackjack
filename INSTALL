@@ -1,0 +1,84 @@
+<pre>
+==========================================
+
+APPLICATION INSTALLATION INSTRUCTIONS
+
+==========================================
+
+Linux:
+
+Dependencies:
+	Python, PyGame, SDL 
+	
+Optional:	
+	wxPython
+
+Local Installation:
+	unzip package to home directory
+	cd into home directory
+	run: "python ./blackjack.py"
+	
+	or, if wx installed:
+	run: "python ./blackjack.py -wx"
+
+System-wide Installation:
+	chmod +x setup.py
+	./setup.py
+	/usr/local/bin/blackjack
+	or
+	/usr/local/bin/blackjack -wx
+
+Uninstall:
+	chmod +x setup.py
+	./setup.py uninstall
+
+==========================================
+Mac:
+
+Note: 
+	Mac users can just run from the 
+	local installation directory without
+	copying files to the python sitepkgs
+	directory.
+
+Dependencies:
+	Python, PyGame
+	
+Optional:
+	wxGTK-2.8.* and wxPython
+
+Installation Procedure:
+	unzip the package
+	cd into package directory
+	python ./blackjack.py
+	
+==========================================
+Windows:
+
+Note:
+	Tested on Windows 7.
+	Windows XP might have to copy .blackjack_config_master 
+	to wherever XP determines your home directory should
+	be, which differs among various configurations.  
+	If you get an error message on startup it will likely
+	require you to manually copy this file yourself.
+
+Note: 
+	Windows users can just run from the 
+	local installation directory without
+	copying files to the python sitepkgs
+	directory.
+
+Dependencies:
+	Python 2.6, PyGame
+	
+Optional:
+	wxGTK-2.8.* and wxPython
+
+Installation Procedure:
+	unzip the package
+	cd into package directory
+	double-click blackjack.py launcher
+
+==========================================
+</pre>

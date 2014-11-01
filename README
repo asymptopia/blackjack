@@ -1,0 +1,53 @@
+<pre>
+/**********************************************************
+	
+    Organization    :Dona Ana Cycle Salvage
+                     915 Dona Ana Rd., Las Cruces, NM 88007
+                     (575) 526-8278
+	
+    Website          :http://www.dacyclesalvage.com
+					
+    License         :GPLv3
+
+***********************************************************/
+
+             README for MotorCycle BlackJack
+                Version 0.1, May 12, 2011
+
+MotorCycle BlackJack is a standalone blackjack game with 
+configurable motorcycle imagery.  By default the game is 
+configured with a 2011 Honda CBR250R theme, but you can 
+easily drop-in your own images to gaze upon your favorite 
+machine while practicing your blackjack skills.
+
+All platforms (Linux/Mac/Windows) can run the program by
+simply unzipping the package and running blackjack.py from
+within that directory.  Additionally, Linux users can run 
+the setup.py script to install the package files to their
+site-packages/ directory of their python installation.
+
+If you just run from the unzipped package directory then
+images can be added by merely dropping them into the 
+corresponding directories under the application's files
+directory, which is called "bj".  If you installed the
+program via setup.py then the "bj" directory has been 
+copied to $PYTHON_PATH/site-packages/bj, and additional
+images can be dropped into corresponding directories there.
+
+The game is written in Python (www.python.org) and uses
+PyGame (www.pygame.org) and WxPython (www.wxpython.org).
+You should have all three dependencies installed first.
+Please see the INSTALL file for complete instructions.
+
+The syntax for running the game from command-line is:
+blackjack.py		(no wx admin interface)
+blackjack.py -wx 	(launch wxadmin via F1 key)
+
+
+The F1 key launches the admin configuration interface.
+The F12 key sets display mode=FULLSCREEN (Linux only)
+The F10 key saves a screenshot to your current directory.
+ESCAPE key exits the game.
+
+
+</pre>
