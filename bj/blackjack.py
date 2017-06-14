@@ -128,7 +128,7 @@ class BlackJack:
 		infname=os.path.join(homedir,'.blackjack_config')
 		
 		if not os.path.exists(infname):
-			master_fname=os.path.join(fontdir,'.blackjack_config_master')
+			master_fname=os.path.join(fontdir,'dot_blackjack_config')
 			if self.env.OS=='win':
 				cmd="copy %s \"%s\""%(master_fname,os.path.join(homedir,'.blackjack_config'))
 				os.system(cmd)
