@@ -1,36 +1,37 @@
 <pre>
+"""
 /**********************************************************
-	
-    Organization    :Dona Ana Cycle Salvage
-                     915 Dona Ana Rd., Las Cruces, NM 88007
-                     (575) 526-8278
-	
-    Website          :http://www.dacyclesalvage.com
-					
+
+    Author          :Charlie Cosse
+
+    Email           :ccosse_at_gmail_dot_com
+
     License         :GPLv3
 
 ***********************************************************/
+"""
+Updated 7/22/2018 tested with PyGame 1.9.4 and Python 3.6
 
              README for MotorCycle BlackJack
                 Version 0.1, May 12, 2011
 
-MotorCycle BlackJack is a standalone blackjack game with 
-configurable motorcycle imagery.  By default the game is 
-configured with a 2011 Honda CBR250R theme, but you can 
-easily drop-in your own images to gaze upon your favorite 
+MotorCycle BlackJack is a standalone blackjack game with
+configurable motorcycle imagery.  By default the game is
+configured with a 2011 Honda CBR250R theme, but you can
+easily drop-in your own images to gaze upon your favorite
 machine while practicing your blackjack skills.
 
 All platforms (Linux/Mac/Windows) can run the program by
 simply unzipping the package and running blackjack.py from
-within that directory.  Additionally, Linux users can run 
+within that directory.  Additionally, Linux users can run
 the setup.py script to install the package files to their
 site-packages/ directory of their python installation.
 
 If you just run from the unzipped package directory then
-images can be added by merely dropping them into the 
+images can be added by merely dropping them into the
 corresponding directories under the application's files
 directory, which is called "bj".  If you installed the
-program via setup.py then the "bj" directory has been 
+program via setup.py then the "bj" directory has been
 copied to $PYTHON_PATH/site-packages/bj, and additional
 images can be dropped into corresponding directories there.
 

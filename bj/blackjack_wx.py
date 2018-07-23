@@ -1,11 +1,11 @@
 # -*- coding: UTF-8 -*-
 
 import wx
-from wxadmin import *
-from blackjack import *
+from bj.wxadmin import *
+from bj.blackjack import *
 
 class BlackJackAppWX(wx.App):
-	
+
 	def __init__(self):
 		#print 'BlackJackAppWX'
 		wx.App.__init__(self, 0)
@@ -19,4 +19,3 @@ class BlackJackAppWX(wx.App):
 					pygame.display.toggle_fullscreen()
 					prog.FULLSCREEN*=-1
 				rval=prog.admin.ShowModal()
-			

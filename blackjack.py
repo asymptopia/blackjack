@@ -11,7 +11,7 @@ Usage: blackjack [OPTION]
 	-help			Show this help
 	-wx				Enable the wx admin interface
 	"""
-	print msg
+	print(msg)
 	
 
 if __name__ == "__main__":

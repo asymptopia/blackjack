@@ -1,12 +1,10 @@
 """
 /**********************************************************
-	
-	Organization	:Dona Ana Cycle Salvage
-					 915 Dona Ana Rd., Las Cruces, NM 88007
-					 (575) 526-8278
-	
-	Website			:http://www.dacyclesalvage.com
-					
+
+    Author          :Charlie Cosse
+
+    Email           :ccosse_at_gmail_dot_com
+
     License         :GPLv3
 
 ***********************************************************/
@@ -32,13 +30,13 @@ class Player:
 		self.wonLastHand=0
 		self.insurance=0
 		self.win=0
-	
+
 	def set_win(self,val):
 		self.win=val
-	
+
 	def get_win(self):
 		return(self.win)
-			
+
 	def newHand(self):
 		hand={}
 		hand['isClosed']=0
@@ -70,25 +68,25 @@ class Player:
 			for handIdx in range(0,len(hands)):
 				if not hands[handIdx]['isClosed']:open_count=open_count+1
 			if open_count==0:break
-			
+
 			for handIdx in range(0,len(hands)):
 				if len(hands[handIdx]['cards'])==1:
 					hands[handIdx]['cards'].append(table.dealer.hit())
 					hands[handIdx]['blackjack']=self.checkForBlackjack(handIdx)
 					if hands[handIdx]['blackjack']==1:hands[handIdx]['isClosed']=1
-							
+
 				while hands[handIdx]['isClosed']!=1:
 					time.sleep(table.global_config['TSLEEP_BTW_CARDS']['VALUE'])
 					table.message_surface=None
 					table.update()
-					dealerCard=table.dealer.tell()		
-					
+					dealerCard=table.dealer.tell()
+
 					row,value=self.getStrVal(hands[handIdx]['cards'],self.amDealer,hands[handIdx]['value'])
 					hands[handIdx]['value']=value
 					soft=self.soft_total(hands[handIdx]['cards'],self.amDealer,hands[handIdx]['value'])
 					if hands[handIdx]['value']>21 and soft<=21:hands[handIdx]['value']=soft
-					
-					
+
+
 					col,dealerValue=self.getStrVal([dealerCard,],1,0)#tell getStrVal to evaluate dealerCard w/prevValue=0
 					if hands[handIdx]['value']>=21:#	<-used to have "value>=21" here -- was hard to find bug!!
 						rule='A'
@@ -100,10 +98,10 @@ class Player:
 							flag=0
 							BG=self.parent.global_config['COLOR_BG']['VALUE']
 							HBG=self.parent.global_config['COLOR_HEADER_BG']['VALUE']
-							
+
 							table.message_surface=table.pyfont.render("Enter: A,S,D,H",1,BG,HBG)
 							table.update()
-							
+
 							while 1:
 								for event1 in pygame.event.get():
 									if event1.type==KEYDOWN and event1.key==K_F1:
@@ -131,14 +129,14 @@ class Player:
 										rule='D';flag=1
 									elif event1.type==KEYDOWN and event1.key==K_t:
 										rule='Ds';flag=1
-									
+
 								if flag==1:break
 								table.update()
-								
+
 							hands[handIdx]['rule']=rule
 							#table.message_surface=None
 							table.update()
-						
+
 					#print "rule=%s"%rule
 					#table.set_status_label(rule)
 					if rule=='A':
@@ -152,7 +150,7 @@ class Player:
 							hands[handIdx]['value']=soft
 						table.update()
 						break
-						
+
 					elif rule=='S':
 						#print 'splitting'
 						#get back hand of original index and "new hand" which need to append to hands:
@@ -162,7 +160,7 @@ class Player:
 						newhand['cards'].append(hands[handIdx]['cards'].pop())
 						hands.append(newhand)
 						table.update()
-						
+
 						#update both after changing:
 						#hit and update first hand
 						card=table.dealer.hit()
@@ -170,7 +168,7 @@ class Player:
 						row,value=self.getStrVal(hands[handIdx]['cards'],self.amDealer,0)
 						hands[handIdx]['value']=value
 						table.update()
-						
+
 					elif rule=='D' or rule=='Ds':
 						if len(hands[handIdx]['cards'])==2:
 							#print 'doubling-down'
@@ -188,7 +186,7 @@ class Player:
 							row,value=self.getStrVal(hands[handIdx]['cards'],self.amDealer,hands[handIdx]['value'])
 							hands[handIdx]['value']=value
 							table.update()
-							
+
 						elif rule=='Ds':
 							#print 'can\'t double so standing'
 							hands[handIdx]['isClosed']=1
@@ -199,7 +197,7 @@ class Player:
 							hands[handIdx]['cards'].append(table.dealer.hit())
 							row,value=self.getStrVal(hands[handIdx]['cards'],self.amDealer,hands[handIdx]['value'])
 							hands[handIdx]['value']=value
-							
+
 					elif rule=='H':
 						hands[handIdx]['cards'].append(table.dealer.hit())
 						row,value=self.getStrVal(hands[handIdx]['cards'],self.amDealer,hands[handIdx]['value'])
@@ -208,10 +206,10 @@ class Player:
 							hands[handIdx]['busted']=1
 							hands[handIdx]['isClosed']=1
 						table.update()
-							
+
 					else:
 						table.update()
-						
+
 					if (not self.amDealer) and (hands[handIdx]['isClosed']==1):
 						soft=self.soft_total(hands[handIdx]['cards'],self.amDealer,hands[handIdx]['value'])#bug? if already softened
 						if soft<hands[handIdx]['value']:
@@ -219,34 +217,34 @@ class Player:
 							#print 'hand closed @ %d'%(soft)
 						else:pass#print 'hand closed @ %d'%(hands[handIdx]['value'])
 						break
-					
+
 					elif (self.amDealer)&(hands[handIdx]['value']>=17):#dealer stands on 17
 						hands[handIdx]['isClosed']=1
 						#print 'dealer closed @ %s'%(hands[handIdx]['value'])
 						break
-		
+
 		#table.message_surface=None
 		table.update()
 		val_string="returning; value=%d"%hands[0]['value']
 		#print val_string
 		return 1
-					
-	
+
+
 	def getStrVal(self,*args):
-		
+
 		"""
 		NOTE: this section could use re-writing.
 		"""
-		
+
 		rule=None
 		cards=args[0]
 		isDealer=args[1]
 		prevValue=args[2]
 		numcards=len(cards)
-		
+
 		for i in range(0,len(cards)):
 			equality="%s=%s"%(cards[i].name,cards[i].name[:-1]),
-		
+
 		if numcards==1:
 			#being called for dealer upcard(gives col={0,1...8,A=9})
 			if cards[0].name[:-1]=='A':
@@ -257,7 +255,7 @@ class Player:
 			elif cards[0].name[:-1]=='Q':v0=10
 			elif cards[0].name[:-1]=='K':v0=10
 			else:v0=int(cards[0].name[:-1])
-			col=`v0-2`
+			col=str(v0-2)
 			return(col,v0)
 		elif numcards==2:
 			#vtot=v0+v1
@@ -280,35 +278,35 @@ class Player:
 			#get vtot:
 			vtot=v0+v1#only way can be 2 is if dealer w/2 Aces
 			if vtot==2:return('AA',vtot)#only dealer w/A
-			elif v0==1:return(`vtot`,vtot)#only dealer w/A
-			elif v1==1:return(`vtot`,vtot)#only dealer w/A
+			elif v0==1:return(str(vtot),vtot)#only dealer w/A
+			elif v1==1:return(str(vtot),vtot)#only dealer w/A
 			elif vtot==22:return('AA',vtot)#only player w/A
-			elif v0==11:return('A'+`v1`,vtot)
-			elif v1==11:return('A'+`v0`,vtot)
-			elif v0==v1 and cards[0].name[:-1]==cards[1].name[:-1]:return(`v0`+`v1`,vtot)#pair identical
-			elif v0==v1:return(`vtot`,vtot)#(Q,10)
-			else:return(`vtot`,vtot)#same as above condition
-			
+			elif v0==11:return('A'+str(v1),vtot)
+			elif v1==11:return('A'+str(v0),vtot)
+			elif v0==v1 and cards[0].name[:-1]==cards[1].name[:-1]:return(str(v0)+str(v1),vtot)#pair identical
+			elif v0==v1:return(str(vtot),vtot)#(Q,10)
+			else:return(str(vtot),vtot)#same as above condition
+
 		else:
 			if self.amDealer:
-				return(`self.hard_total(cards,self.amDealer)`,self.hard_total(cards,self.amDealer))
+				return(str(self.hard_total(cards,self.amDealer)),self.hard_total(cards,self.amDealer))
 			else:
 				htot=self.hard_total(cards,self.amDealer)
 				num_aces=0
 				for card in cards:
 					if card.name[:-1]=='A':num_aces=num_aces+1
-				
+
 				#current problem: want value=highest possible;
 				if num_aces>0:
 					total_minus_ace=htot
 					for dummy in range(num_aces):
 						total_minus_ace=total_minus_ace-10
-						if htot<=21:return('A'+`total_minus_ace`,htot)
+						if htot<=21:return('A'+str(total_minus_ace),htot)
 						if total_minus_ace<=10:
-							return('A'+`total_minus_ace`,total_minus_ace)
-					return(`total_minus_ace`,total_minus_ace)
-				else:return(`htot`,htot)
-		
+							return('A'+str(total_minus_ace),total_minus_ace)
+					return(str(total_minus_ace),total_minus_ace)
+				else:return(str(htot),htot)
+
 	def hard_total(self,cards,isDealer):
 		tot=0
 		for card in cards:
@@ -319,8 +317,8 @@ class Player:
 			elif val=="J" or val=="Q" or val=="K":tot=tot+10
 			else:tot=tot+int(val)
 		return(tot)
-		
-		
+
+
 	def soft_total(self,*args):
 		cards=args[0]
 		isDealer=args[1]
@@ -347,7 +345,7 @@ class Player:
 		if c=='A':c=9
 		else:c=int(c)-2
 		try:rule=self.rules[r][c]
-		except Exception,e:
+		except:
 			"""
 			print "getRule.EXCEPTION",e
 			print "r=%s\tc=%s"%(r,c)
@@ -360,11 +358,9 @@ class Player:
 			"""
 			#nothing=raw_input('hit enter to continue')
 			rule='A'
-		return(rule)	
-		
+		return(rule)
+
 	def placeBet(self,*args):
 		handIdx=args[0]
 		bet=args[1]
 		self.hands[handIdx]['bet']=float(bet)
-
-

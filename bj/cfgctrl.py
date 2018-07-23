@@ -1,12 +1,10 @@
 """
 /**********************************************************
-	
-	Organization	:Dona Ana Cycle Salvage
-					 915 Dona Ana Rd., Las Cruces, NM 88007
-					 (575) 526-8278
-	
-	Website			:http://www.dacyclesalvage.com
-					
+
+    Author          :Charlie Cosse
+
+    Email           :ccosse_at_gmail_dot_com
+
     License         :GPLv3
 
 ***********************************************************/
@@ -15,8 +13,8 @@ import wx,os
 import wx.lib.scrolledpanel as scrolled
 import wx.html as html
 
-from cfgctrlobj import *
-from dict_formatter import *
+from bj.cfgctrlobj import *
+from bj.dict_formatter import *
 
 DEBUG=0
 
@@ -31,18 +29,18 @@ class CfgCtrl(wx.Panel):
 		self.admin=admin
 		self.global_config=admin.global_config
 		wx.Panel.__init__(self,nb,wx.NewId(),wx.DefaultPosition,wx.DefaultSize,style=wx.FULL_REPAINT_ON_RESIZE)
-		
+
 	def setup(self,name):
 		self.name=name
 		button_height=35
 		if self.admin.env.OS=='win':button_height=20
 		if self.admin.env.OS=='win':button_height=20
 		button_size=wx.Size(100,button_height)
-		
+
 		toolbar=wx.ToolBar(self,wx.NewId(),style=wx.TB_HORIZONTAL)
 		self.sizer=wx.BoxSizer(wx.VERTICAL);
 		self.sizer.Add(toolbar,0,wx.EXPAND);
-		
+
 		xpos=0
 		if name=='Globals':
 			#SAVE BUTTON
@@ -52,7 +50,7 @@ class CfgCtrl(wx.Panel):
 			saveB.SetToolTip(wx.ToolTip('Save these configuration options'))
 			wx.EVT_BUTTON(toolbar,xid,self.saveCB)
 			xpos+=100
-	
+
 			#LOGOUT BUTTON
 			xid=wx.NewId()
 			logoutB=wx.Button(toolbar,xid,"Hide Window",size=button_size,pos=wx.Point(xpos,0))
@@ -60,7 +58,7 @@ class CfgCtrl(wx.Panel):
 			toolbar.AddControl(logoutB)
 			wx.EVT_BUTTON(toolbar,xid,self.logoutCB)
 			xpos+=100
-			
+
 			#SHOW_ALL TOGGLE
 			xid=wx.NewId()
 			showallB=wx.CheckBox(toolbar,xid,"ShowAll",size=button_size,pos=wx.Point(xpos,0))
@@ -68,18 +66,18 @@ class CfgCtrl(wx.Panel):
 			showallB.SetToolTip(wx.ToolTip('Show all configurable parameters, including those hidden by default'))
 			#toolbar.AddControl(showallB)
 			wx.EVT_CHECKBOX(toolbar,xid,self.showallCB)
-		
+
 			self.load()
 
 		elif self.name=='GPL':self.reload('GPL')
 		#elif self.name=='Asymptopia':self.reload('Asymptopia')
 		#elif self.name=='Readme':self.reload('Readme')
-		
+
 		self.SetSizer(self.sizer)
 		self.SetAutoLayout(True)
 		self.Layout()
 		#panel.get_installed()
-		
+
 	def reload(self,target):
 		if False:pass
 		elif target=='Readme':
@@ -87,13 +85,13 @@ class CfgCtrl(wx.Panel):
 			inf=open(os.path.join(self.admin.env.sitepkgdir,'bj','README'))
 			gpl=inf.read()
 			inf.close()
-			if DEBUG:print dir(editor)
+			#if DEBUG:print dir(editor)
 			editor.WriteText(gpl)
 			editor.SetEditable(0)
 			self.cp=editor
 			self.cp.SetSizer(self.sizer)
 			self.sizer.Add(self.cp,1,wx.EXPAND,1)
-			
+
 		elif target=='GPL':
 			try:
 				#editor=html.HtmlWindow(self.cp,wx.NewId(),style=wx.NO_FULL_REPAINT_ON_RESIZE)
@@ -111,25 +109,25 @@ class CfgCtrl(wx.Panel):
 				self.cp=editor
 				self.cp.SetSizer(self.sizer)
 				self.sizer.Add(editor,1,wx.EXPAND,1)
-			except Exception,e:print e
+			except:pass
 
 		elif target=='Asymptopia':
 			editor=wx.TextCtrl(self,wx.NewId(),style=wx.TE_MULTILINE|wx.TE_PROCESS_TAB)
 			inf=open(os.path.join(self.admin.env.sitepkgdir,'bj','ASYMPTOPIA'))
 			gpl=inf.read()
 			inf.close()
-			if DEBUG:print dir(editor)
+			#if DEBUG:print dir(editor)
 			editor.WriteText(gpl)
 			editor.SetEditable(0)
 			self.cp=editor
 			self.cp.SetSizer(self.sizer)
 			self.sizer.Add(self.cp,1,wx.EXPAND,1)
-			
-		
+
+
 	def recreate_cp(self):
-		
+
 		self.cfgctrlobjs=[]
-		
+
 		if self.cp:
 			self.sizer.Detach(self.cp)
 			del self.cp
@@ -145,7 +143,7 @@ class CfgCtrl(wx.Panel):
 		self.cp.Layout()
 		self.cp.Refresh()
 		self.sizer.Add(self.cp,2,wx.GROW)
-	
+
 	def load(self):
 		self.recreate_cp()
 		obj_keys=self.global_config.keys()
@@ -162,32 +160,30 @@ class CfgCtrl(wx.Panel):
 		self.Layout()
 		wx.ToolTip.Enable(True)
 		wx.ToolTip.SetDelay(2000)
-		
+
 	def saveCB(self,e):
-		
+
 		for obj in self.cfgctrlobjs:
 			obj.update()#widget.value -> obj.val['value']
 			self.global_config[obj.key]=obj.obj_dict
-			
+
 		if self.global_config.has_key('letters'):del self.global_config['letters']
 		if self.global_config.has_key('distribution'):del self.global_config['distribution']
 		if self.global_config.has_key('scoring'):del self.global_config['scoring']
-		
+
 		oufdir=os.getenv('HOME')
 		if not oufdir:oufdir=os.getenv('USERPROFILE')
-		
+
 		oufname=os.path.join(oufdir,'.blackjack_config')
 		ouf=open(oufname,'w')
 		rval=format_dict(self.global_config,0)
 		ouf.write(rval)
 		ouf.close()
-		
+
 		try:
 			self.reload_config()
-		except Exception,e:
-			print e
-		
-		
+		except:pass
+
 
 	def reload_config(self):
 		self.admin.reload_config()
@@ -195,7 +191,7 @@ class CfgCtrl(wx.Panel):
 
 	def logoutCB(self,e):
 		self.admin.EndModal(0)
-	
+
 	def showallCB(self,e):
 		if self.SHOW_ALL==False:
 			self.SHOW_ALL=True
